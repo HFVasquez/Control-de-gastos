@@ -172,6 +172,14 @@ body{background:#f4f5f6;color:var(--ink)}
 .cloud-auth{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#eceef0,#f9f9fa)}.cloud-auth[hidden]{display:none}.cloud-auth form{width:min(420px,100%);background:#fff;border:1px solid #e0e2e5;border-radius:18px;padding:30px;box-shadow:0 24px 70px rgba(25,28,32,.18)}.cloud-logo{width:46px;height:36px;margin-bottom:20px;background:linear-gradient(135deg,#d82d40,#941622);clip-path:polygon(0 0,100% 0,67% 40%,100% 40%,20% 100%,40% 52%,0 52%)}.cloud-auth h1{margin:0;font-size:28px}.cloud-auth p{color:#70767d;margin:7px 0 20px}.cloud-auth label{display:block;margin:12px 0 5px;color:#555b62;font-size:12px;font-weight:700}.cloud-auth input{width:100%}.cloud-auth button{width:100%;margin-top:18px}.cloud-auth small{display:block;text-align:center;color:#8a8f95;margin-top:14px}.cloud-auth-msg{min-height:20px!important;margin:10px 0 0!important;color:#a91f2c!important;font-weight:600;font-size:12px}.cloud-bar{position:fixed;right:18px;top:12px;z-index:60;display:flex;align-items:center;gap:7px;padding:7px 9px;background:rgba(255,255,255,.96);border:1px solid #e0e2e5;border-radius:18px;box-shadow:0 5px 18px rgba(25,28,32,.08);font-size:10px}.cloud-bar[hidden]{display:none}.cloud-bar span:first-child{width:8px;height:8px;border-radius:50%;background:#239269}.cloud-bar.syncing span:first-child{background:#d29624}.cloud-bar.error span:first-child{background:#b62231}.cloud-bar button{border:0;background:#f0f1f2;border-radius:11px;padding:4px 7px;font:600 9px Figtree,sans-serif;cursor:pointer}.cloud-migration-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}#cloudMigration{max-width:520px;border:0;border-radius:16px;box-shadow:0 25px 70px rgba(20,24,29,.3)}#cloudMigration::backdrop{background:rgba(20,23,27,.6)}
 @media(max-width:760px){.cloud-bar{top:auto;bottom:76px;right:12px}.cloud-bar #cloudStatus{display:none}.cloud-auth form{padding:24px}.cloud-auth h1{font-size:25px}}
 
+
+@media(max-width:760px){
+ .mobile-more-backdrop:not([hidden]){display:block!important;position:fixed!important;inset:0!important;z-index:998!important;background:rgba(18,21,25,.48)!important}
+ .mobile-more-sheet:not([hidden]){display:block!important;position:fixed!important;left:12px!important;right:12px!important;bottom:calc(82px + env(safe-area-inset-bottom))!important;z-index:999!important;background:#fff!important;border-radius:18px!important;padding:16px!important;box-shadow:0 24px 70px rgba(20,23,27,.32)!important}
+ .mobile-more-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:9px!important}
+ .mobile-more-grid button{min-height:100px!important;touch-action:manipulation!important}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -504,8 +512,8 @@ if(ENC){$('#lock').hidden=false;$('#lu').focus()}else{render();notify()}
  function openMore(){if(!isMobile())return;if(sheet())sheet().hidden=false;if(back())back().hidden=false}
  document.addEventListener('click',function(ev){
    var navBtn=ev.target.closest&&ev.target.closest('#nav button');
-   if(navBtn&&isMobile()){var buttons=[].slice.call(document.querySelectorAll('#nav button'));if(buttons.indexOf(navBtn)===5){ev.preventDefault();ev.stopImmediatePropagation();openMore();return}}
-   var go=ev.target.closest&&ev.target.closest('[data-go]');if(go){closeMore();window.tab=go.getAttribute('data-go');render();scrollTo(0,0);if(window.refreshMobileWidgets)refreshMobileWidgets();return}
+   if(navBtn&&isMobile()&&navBtn.textContent.trim()==='Más'){ev.preventDefault();ev.stopImmediatePropagation();openMore();return}
+   var go=ev.target.closest&&ev.target.closest('[data-go]');if(go){closeMore();tab=go.getAttribute('data-go');render();scrollTo(0,0);if(window.refreshMobileWidgets)refreshMobileWidgets();return}
    if(ev.target.id==='closeMobileMore'||ev.target.id==='mobileMoreBackdrop')closeMore();
  },true);
  window.addEventListener('resize',function(){if(!isMobile())closeMore()});
