@@ -167,9 +167,16 @@ body{background:#f4f5f6;color:var(--ink)}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
 .final-version{font-size:8px;color:#fff;background:#a91f2c;border-radius:9px;padding:3px 6px;letter-spacing:.08em;margin-left:auto}
+
+/* SUPABASE CLOUD SYNC */
+.cloud-auth{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#eceef0,#f9f9fa)}.cloud-auth[hidden]{display:none}.cloud-auth form{width:min(420px,100%);background:#fff;border:1px solid #e0e2e5;border-radius:18px;padding:30px;box-shadow:0 24px 70px rgba(25,28,32,.18)}.cloud-logo{width:46px;height:36px;margin-bottom:20px;background:linear-gradient(135deg,#d82d40,#941622);clip-path:polygon(0 0,100% 0,67% 40%,100% 40%,20% 100%,40% 52%,0 52%)}.cloud-auth h1{margin:0;font-size:28px}.cloud-auth p{color:#70767d;margin:7px 0 20px}.cloud-auth label{display:block;margin:12px 0 5px;color:#555b62;font-size:12px;font-weight:700}.cloud-auth input{width:100%}.cloud-auth button{width:100%;margin-top:18px}.cloud-auth small{display:block;text-align:center;color:#8a8f95;margin-top:14px}.cloud-auth-msg{min-height:20px!important;margin:10px 0 0!important;color:#a91f2c!important;font-weight:600;font-size:12px}.cloud-bar{position:fixed;right:18px;top:12px;z-index:60;display:flex;align-items:center;gap:7px;padding:7px 9px;background:rgba(255,255,255,.96);border:1px solid #e0e2e5;border-radius:18px;box-shadow:0 5px 18px rgba(25,28,32,.08);font-size:10px}.cloud-bar[hidden]{display:none}.cloud-bar span:first-child{width:8px;height:8px;border-radius:50%;background:#239269}.cloud-bar.syncing span:first-child{background:#d29624}.cloud-bar.error span:first-child{background:#b62231}.cloud-bar button{border:0;background:#f0f1f2;border-radius:11px;padding:4px 7px;font:600 9px Figtree,sans-serif;cursor:pointer}.cloud-migration-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}#cloudMigration{max-width:520px;border:0;border-radius:16px;box-shadow:0 25px 70px rgba(20,24,29,.3)}#cloudMigration::backdrop{background:rgba(20,23,27,.6)}
+@media(max-width:760px){.cloud-bar{top:auto;bottom:76px;right:12px}.cloud-bar #cloudStatus{display:none}.cloud-auth form{padding:24px}.cloud-auth h1{font-size:25px}}
+
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
+<div id="cloudAuth" class="cloud-auth"><form id="cloudLoginForm"><div class="cloud-logo"></div><h1>Control Financiero</h1><p>Inicia sesión para sincronizar tus datos entre todos tus dispositivos.</p><label>Correo electrónico</label><input id="cloudEmail" type="email" autocomplete="username" required placeholder="correo@ejemplo.com"><label>Contraseña</label><input id="cloudPassword" type="password" autocomplete="current-password" required placeholder="Tu contraseña"><p id="cloudAuthMsg" class="cloud-auth-msg"></p><button class="btn" type="submit">Iniciar sesión</button><small>Conexión segura mediante Supabase Auth</small></form></div><div id="cloudBar" class="cloud-bar" hidden><span id="cloudDot"></span><span id="cloudStatus">Sincronizado</span><button type="button" id="cloudSyncNow">Sincronizar</button><button type="button" id="cloudLogout">Salir</button></div><dialog id="cloudMigration"><h2>Sincronización inicial</h2><p>Encontramos datos guardados en este dispositivo. Puedes subirlos a la nube o usar los datos que ya existan en Supabase.</p><div class="cloud-migration-actions"><button class="btn g" id="cloudUseRemote" type="button">Usar datos de la nube</button><button class="btn" id="cloudUploadLocal" type="button">Subir datos de este dispositivo</button></div></dialog>
 <header class="app-mobile-header" aria-label="Encabezado de Control Financiero"><div class="app-brand"><span class="app-logo" aria-hidden="true"></span><span>CONTROL FINANCIERO</span><span class="final-version">FINAL</span></div><h1>Resumen</h1><p>Tu dinero, bajo control</p><div class="period-chip">▣ Mes actual</div></header>
 <section id="mobileDashboardWidgets" class="mobile-dashboard-widgets" aria-label="Resumen financiero del mes"><div class="mobile-kpi-grid"><article class="mobile-kpi"><span>↑ INGRESOS DEL MES</span><b id="mkIncome">L 0</b></article><article class="mobile-kpi expense"><span>↓ GASTOS DEL MES</span><b id="mkExpense">L 0</b></article></div><article class="mobile-payments"><div class="mobile-section-title"><strong>Próximos pagos</strong><button type="button" onclick="tab='fij';render();scrollTo(0,0)">Ver todos</button></div><div id="mobileDueList"></div></article></section>
 <main id="app"></main>
@@ -198,8 +205,9 @@ async function dkey(u,p,salt){const m=await crypto.subtle.importKey('raw',te.enc
 async function seal(j,k){const iv=crypto.getRandomValues(new Uint8Array(12));
  return JSON.stringify({s:b64(k.salt),i:b64(iv),d:b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},k.key,te.encode(j)))})}
 let Q=Promise.resolve();
-const save=()=>{try{if(ENC){if(!LK)return;const j=JSON.stringify(S),k=LK;Q=Q.then(async()=>localStorage.setItem('fin_enc',await seal(j,k))).catch(()=>{})}
+const saveLocal=()=>{try{if(ENC){if(!LK)return;const j=JSON.stringify(S),k=LK;Q=Q.then(async()=>localStorage.setItem('fin_enc',await seal(j,k))).catch(()=>{})}
  else localStorage.setItem('fin',JSON.stringify(S))}catch(x){}};
+const save=()=>{saveLocal();if(window.cloudScheduleSync)window.cloudScheduleSync()};
 async function unlock(){const er=$('#le');er.textContent='';
  try{const o=JSON.parse(localStorage.getItem('fin_enc')),salt=ub(o.s),key=await dkey($('#lu').value,$('#lp').value,salt),
   pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(o.i)},key,ub(o.d));
@@ -522,6 +530,59 @@ if(ENC){$('#lock').hidden=false;$('#lu').focus()}else{render();notify()}
  var timer=0,obs=new MutationObserver(function(){clearTimeout(timer);timer=setTimeout(function(){if(window.refreshMobileWidgets)window.refreshMobileWidgets()},30)});
  obs.observe(app,{childList:true});
  window.addEventListener('load',function(){if(window.refreshMobileWidgets)window.refreshMobileWidgets()});
+})();
+</script>
+<script>
+(function(){
+ const SUPABASE_URL='https://cfqprdpvqerrqlvjpuqe.supabase.co', SUPABASE_KEY='sb_publishable_S6j3mj3S2oq4EoM8pFg0Cg_AXX57PHz';
+ if(!window.supabase||typeof window.supabase.createClient!=='function'){document.getElementById('cloudAuthMsg').textContent='No se pudo cargar la librería de Supabase. Prueba esta versión desde GitHub Pages (HTTPS) o con conexión a Internet.';return;}
+ const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ let user=null,syncTimer=null,syncing=false,dirty=false,lastPull=0;
+ const q=id=>document.getElementById(id);
+ function status(text,kind){const bar=q('cloudBar');q('cloudStatus').textContent=text;bar.className='cloud-bar'+(kind?' '+kind:'')}
+ function hasLocal(){return (S.tx&&S.tx.length)||(S.cards&&S.cards.length)||(S.fixed&&S.fixed.length)}
+ function mapTypeOut(t){return {in:'ingreso',out:'gasto',wd:'retiro',tr:'transferencia',adj:'ajuste'}[t]||'gasto'}
+ function mapTypeIn(t){return {ingreso:'in',gasto:'out',retiro:'wd',transferencia:'tr',ajuste:'adj'}[t]||'out'}
+ function numId(v){const n=Number(v);return Number.isSafeInteger(n)&&n>0?n:Date.now()+Math.floor(Math.random()*100000)}
+ async function remoteIsEmpty(){const {count,error}=await db.from('movimientos').select('*',{count:'exact',head:true});if(error)throw error;const {count:c2,error:e2}=await db.from('cuentas').select('*',{count:'exact',head:true});if(e2)throw e2;const {count:c3,error:e3}=await db.from('gastos_fijos').select('*',{count:'exact',head:true});if(e3)throw e3;return (count||0)+(c2||0)+(c3||0)===0}
+ async function pullCloud(){
+  if(!user||syncing)return;syncing=true;status('Cargando datos…','syncing');
+  try{
+   const [ca,mo,gf,cf]=await Promise.all([db.from('cuentas').select('*').order('id'),db.from('movimientos').select('*').order('fecha'),db.from('gastos_fijos').select('*').order('id'),db.from('configuracion').select('*').maybeSingle()]);
+   for(const r of [ca,mo,gf,cf])if(r.error)throw r.error;
+   S.cards=(ca.data||[]).filter(x=>x.tipo!=='efectivo').map(x=>({id:Number(x.id),bank:x.banco||x.nombre||'Cuenta',kind:x.tipo,last4:x.ultimos4||'',limit:Number(x.limite)||0}));
+   S.fixed=(gf.data||[]).map(x=>({id:Number(x.id),name:x.nombre,amt:Number(x.monto)||0,days:x.dias||[30],day:(x.dias||[30])[0],cat:x.categoria||'Otros',src:x.cuenta_id?Number(x.cuenta_id):'cuenta'}));
+   S.tx=(mo.data||[]).map(x=>{const det=x.detalles||{};const type=mapTypeIn(x.tipo);let amt=Number(x.monto)||0;if(type==='adj'&&det.original_amt!=null)amt=Number(det.original_amt);return {id:Number(x.id),date:x.fecha,type,desc:x.descripcion,cat:x.categoria||'Otros',amt,src:x.cuenta_id?Number(x.cuenta_id):(det.src||'cuenta'),to:x.cuenta_destino_id?Number(x.cuenta_destino_id):undefined,parts:det.parts||[],fixed:x.gasto_fijo_id?Number(x.gasto_fijo_id):undefined,fixedDay:x.cuota_dia||undefined}});
+   if(cf.data)S.set={min:Number(cf.data.alerta_minima)||500,payday:Number(cf.data.dia_pago)||13};else S.set=S.set||{min:500,payday:13};
+   saveLocal();dirty=false;lastPull=Date.now();render();if(window.refreshMobileWidgets)refreshMobileWidgets();status('Sincronizado');
+  }catch(e){console.error(e);status('Error de sincronización','error');alert('No se pudieron cargar los datos de Supabase: '+e.message)}finally{syncing=false}
+ }
+ async function pushCloud(){
+  if(!user||syncing)return;syncing=true;status('Guardando…','syncing');
+  try{
+   const uid=user.id;
+   const accounts=(S.cards||[]).map(c=>({id:numId(c.id),user_id:uid,nombre:c.bank||'Cuenta',banco:c.bank||null,tipo:c.kind,ultimos4:c.last4||null,limite:Number(c.limit)||0}));
+   const fixed=(S.fixed||[]).map(f=>({id:numId(f.id),user_id:uid,nombre:f.name,monto:Number(f.amt)||0,categoria:f.cat||'Otros',dias:f.days&&f.days.length?f.days:[f.day||30],cuenta_id:typeof f.src==='number'?f.src:null,activo:true}));
+   const movements=(S.tx||[]).map(t=>({id:numId(t.id),user_id:uid,fecha:t.date,tipo:mapTypeOut(t.type),descripcion:t.desc||'Movimiento',categoria:t.cat||null,monto:Math.abs(Number(t.amt)||0.01),cuenta_id:typeof t.src==='number'?t.src:null,cuenta_destino_id:typeof t.to==='number'?t.to:null,gasto_fijo_id:t.fixed?Number(t.fixed):null,cuota_dia:t.fixedDay||null,detalles:{src:t.src,parts:t.parts||[],original_amt:t.type==='adj'?Number(t.amt):undefined}}));
+   for(const table of ['movimientos','gastos_fijos','cuentas']){const r=await db.from(table).delete().eq('user_id',uid);if(r.error)throw r.error}
+   if(accounts.length){const r=await db.from('cuentas').insert(accounts);if(r.error)throw r.error}
+   if(fixed.length){const r=await db.from('gastos_fijos').insert(fixed);if(r.error)throw r.error}
+   if(movements.length){const r=await db.from('movimientos').insert(movements);if(r.error)throw r.error}
+   const r=await db.from('configuracion').upsert({user_id:uid,alerta_minima:Number(S.set?.min)||500,dia_pago:Number(S.set?.payday)||13,moneda:'HNL',actualizada_en:new Date().toISOString()});if(r.error)throw r.error;
+   dirty=false;lastPull=Date.now();status('Sincronizado');
+  }catch(e){console.error(e);status('Error al guardar','error');alert('No se pudieron guardar los datos en Supabase: '+e.message)}finally{syncing=false}
+ }
+ window.cloudScheduleSync=function(){if(!user)return;dirty=true;clearTimeout(syncTimer);syncTimer=setTimeout(pushCloud,900)};
+ async function startSession(session){user=session.user;q('cloudAuth').hidden=true;q('cloudBar').hidden=false;status('Conectado');const empty=await remoteIsEmpty();if(empty&&hasLocal())q('cloudMigration').showModal();else await pullCloud()}
+ q('cloudLoginForm').addEventListener('submit',async e=>{e.preventDefault();q('cloudAuthMsg').textContent='Ingresando…';const {data,error}=await db.auth.signInWithPassword({email:q('cloudEmail').value.trim(),password:q('cloudPassword').value});if(error){q('cloudAuthMsg').textContent=error.message;return}q('cloudAuthMsg').textContent='';await startSession(data.session)});
+ q('cloudUploadLocal').onclick=async()=>{q('cloudMigration').close();await pushCloud()};
+ q('cloudUseRemote').onclick=async()=>{q('cloudMigration').close();await pullCloud()};
+ q('cloudSyncNow').onclick=async()=>{dirty?await pushCloud():await pullCloud()};
+ q('cloudLogout').onclick=async()=>{await db.auth.signOut();location.reload()};
+ db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT')location.reload()});
+ db.auth.getSession().then(async({data})=>{if(data.session)await startSession(data.session);else q('cloudAuth').hidden=false});
+ window.addEventListener('focus',()=>{if(user&&!dirty&&Date.now()-lastPull>15000)pullCloud()});
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&user&&!dirty&&Date.now()-lastPull>15000)pullCloud()});
 })();
 </script>
 </body>
