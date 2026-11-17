@@ -52,36 +52,130 @@ dialog::backdrop{background:rgba(19,35,58,.5)}
 #lock{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}#lock[hidden]{display:none}#lock form{width:100%;max-width:340px}
 .tc{padding:14px 0;border-bottom:1px solid var(--line)}.tc:last-child{border:0}
 
-/* CONTROL FINANCIERO - interfaz ejecutiva responsive */
-:root{--bg:#f2f3f5;--ink:#202328;--mut:#71767d;--card:#fff;--line:#e1e4e8;--in:#247258;--out:#ad1f2d;--acc:#ad1f2d;--warn:#a66b16;--graphite:#202328;--soft:#f7f7f8}
-body{background:linear-gradient(135deg,#eef0f2 0%,#f8f8f9 75%);color:var(--ink);padding:0 0 60px 238px;min-height:100vh}
-main{max-width:1180px;margin:0 auto;padding:36px 34px 110px}
-main:before{content:"CONTROL FINANCIERO";display:block;color:var(--acc);font-size:12px;font-weight:800;letter-spacing:.18em;margin:0 0 15px}
-h1{font-size:16px;color:var(--mut);margin:0 0 14px}h2{font-size:15px;text-transform:uppercase;letter-spacing:.09em;color:#4f545a;margin:28px 0 10px}
-.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:15px;box-shadow:0 8px 24px rgba(29,33,38,.055)}
-.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#1f2226 0%,#30343a 72%,#48171e 100%);border-radius:14px;padding:30px 28px;margin-bottom:15px;box-shadow:0 18px 38px rgba(22,25,29,.18);border-left:5px solid var(--acc)}
-.hero:after{content:"";position:absolute;right:-70px;bottom:-100px;width:260px;height:260px;transform:rotate(45deg);background:linear-gradient(135deg,transparent 35%,rgba(190,31,45,.25) 35%,rgba(190,31,45,.25) 48%,transparent 48%,transparent 58%,rgba(190,31,45,.13) 58%,rgba(190,31,45,.13) 72%,transparent 72%)}
-.hero small{color:#c9cdd2;text-transform:uppercase;letter-spacing:.08em}.big{font-size:48px;font-weight:800}.tip{border-color:#4b5057;position:relative;z-index:1}
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);background:transparent;gap:15px;margin-bottom:15px}.tiles div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 7px 20px rgba(31,35,40,.05)}.tiles div:last-child{border:1px solid var(--line)}.tiles small{text-transform:uppercase;font-size:11px;letter-spacing:.07em}.tiles b{font-size:21px}
-.row{padding:14px 8px;border-color:#eceef0}.row:hover{background:#fafafa}.amt{font-weight:800}.out{color:var(--out)}
-.al{border-radius:9px;border:1px solid transparent}.al.bad{background:#fff1f2;border-color:#f0c6ca;color:#951d28}.al.warn{background:#fff8e9;border-color:#eedfbd}
-.btn{border-radius:7px;background:linear-gradient(135deg,#bd2b39,#991a27);box-shadow:0 7px 16px rgba(151,24,36,.16);font-weight:700}.btn:hover{transform:translateY(-1px);filter:brightness(.97)}.btn.g{background:#eef0f2;color:#30343a;border:1px solid #dadddf;box-shadow:none}.btn.r{background:#fff;color:#a31e2b;border:1px solid #e5b8bd;box-shadow:none}
-input,select{border-radius:8px;background:#fbfbfc;border:1px solid #d8dce0;padding:12px;outline:none}input:focus,select:focus{background:#fff;border-color:var(--acc);box-shadow:0 0 0 3px rgba(173,31,45,.1)}
-nav{position:fixed;left:0;top:0;bottom:0;width:238px;right:auto;height:auto;background:linear-gradient(180deg,#202328,#282c31);display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;padding:96px 18px 20px;border:0;box-shadow:10px 0 28px rgba(22,25,29,.08);z-index:10}
-nav:before{content:"CONTROL\A FINANCIERO";white-space:pre;position:absolute;left:28px;top:28px;color:#fff;font-size:17px;font-weight:800;line-height:1.05;letter-spacing:.04em;border-left:6px solid var(--acc);padding-left:13px}
-nav button{max-width:none;flex:0 0 auto;text-align:left;padding:14px 16px;margin:3px 0;border-radius:8px;color:#c9ccd0;font-size:14px;font-weight:600}nav button:hover{background:#30343a;color:#fff}nav button.on{color:#fff;background:linear-gradient(90deg,#8f1723,#b62332);box-shadow:0 7px 18px rgba(122,18,28,.28)}
-.fab{right:30px;bottom:28px;border-radius:8px;padding:14px 24px;background:linear-gradient(135deg,#c12c3b,#9a1926);box-shadow:0 12px 28px rgba(145,22,34,.28);font-weight:800}
-dialog{border-radius:14px;border:1px solid var(--line);box-shadow:0 25px 70px rgba(20,24,29,.3)}dialog::backdrop{background:rgba(22,25,29,.66);backdrop-filter:blur(3px)}
-.bar i{background:linear-gradient(90deg,#34383e,#ad1f2d);border-radius:3px}.date-picks{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}.date-picks label{margin:0;display:flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid var(--line);border-radius:8px;background:#fafafa;cursor:pointer}.date-picks input{width:auto;accent-color:var(--acc)}
-@media(min-width:900px){#app>.hero{width:55%;display:inline-block;vertical-align:top;margin-right:14px}#app>.hero+.tiles{width:calc(45% - 19px);display:inline-grid;vertical-align:top;grid-template-columns:1fr;height:auto}#app>.hero+.tiles div{padding:14px 18px}.card{overflow:hidden}}
-@media(max-width:760px){body{padding:0 0 105px;background:#f3f4f5}main{padding:22px 14px 125px}main:before{margin-top:2px}.hero{padding:25px 20px}.big{font-size:39px}.card{padding:16px;border-radius:11px}.tiles{grid-template-columns:1fr 1fr;gap:10px}.tiles div{padding:14px}.tiles div:last-child{grid-column:1/-1}.tiles b{font-size:18px}nav{left:0;right:0;top:auto;bottom:0;width:auto;height:70px;flex-direction:row;padding:0 5px env(safe-area-inset-bottom);align-items:stretch;justify-content:center;background:#24272c;box-shadow:0 -8px 24px rgba(20,23,27,.14)}nav:before{display:none}nav button{flex:1;max-width:none;text-align:center;padding:7px 2px;margin:0;border-radius:0;font-size:11px;display:flex;align-items:center;justify-content:center}nav button.on{box-shadow:inset 0 3px 0 #d03342;background:#30343a}.fab{right:14px;bottom:82px;padding:13px 18px}.prow{grid-template-columns:1fr 72px 90px 34px}.row{gap:6px}}
+/* SAFE EXECUTIVE THEME - visual only, original logic untouched */
+:root{--bg:#f4f5f6;--ink:#1e2125;--mut:#747980;--card:#fff;--line:#e2e4e7;--acc:#ae1f2d;--out:#ae1f2d;--in:#207158}
+body{background:#f4f5f6;color:var(--ink)}
+.card{border:1px solid var(--line);box-shadow:0 6px 18px rgba(25,28,32,.05);border-radius:12px}.hero{background:linear-gradient(135deg,#202328 0%,#30343a 73%,#521920 100%);border-radius:14px;box-shadow:0 14px 30px rgba(24,27,31,.17)}.btn{background:linear-gradient(135deg,#bd2938,#991925);border-radius:8px}.btn.g{background:#eef0f2;color:#30343a}.fab{background:linear-gradient(135deg,#c12c3b,#991925)}input,select{border-radius:8px}
+@media(min-width:761px){body{padding-left:230px}main{max-width:1180px;padding:34px}nav{left:0;top:0;bottom:0;right:auto;width:230px;height:auto;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;padding:100px 16px 20px;background:#202328;border:0;box-shadow:8px 0 24px rgba(20,23,27,.08)}nav:before{content:'CONTROL FINANCIERO';position:absolute;left:25px;top:35px;color:#fff;font-size:15px;font-weight:800;border-left:6px solid #c12737;padding-left:11px}nav button{max-width:none;flex:0;text-align:left;padding:14px;margin:3px 0;border-radius:8px;color:#c8cbd0}nav button.on{background:linear-gradient(90deg,#8d1722,#b72331);color:#fff}.fab{right:32px;bottom:30px}.tiles{gap:12px}}
+@media(max-width:760px){body{padding-bottom:88px;background:#f7f7f8}main{padding:14px 14px 112px;max-width:none}main:before{content:'CONTROL FINANCIERO';display:block;font-size:16px;font-weight:800;color:#17191d;padding:13px 0 13px 43px;position:relative}main:after{content:'';position:absolute;top:22px;left:20px;width:25px;height:19px;background:linear-gradient(135deg,#df2b3e,#981522);transform:skew(-25deg);border-radius:2px}.hero{padding:20px 17px;border-radius:13px;margin-bottom:10px}.hero small{font-size:10px;letter-spacing:.05em}.big{font-size:36px}.tip{font-size:12px}.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px;background:transparent;margin-bottom:11px}.tiles div{background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px;box-shadow:0 4px 13px rgba(25,28,32,.04)}.tiles div:last-child{grid-column:1/-1;border:1px solid var(--line)}.tiles small{font-size:10px;text-transform:uppercase}.tiles b{font-size:17px}.card{padding:14px;border-radius:11px}.row{padding:11px 2px}.row small{font-size:11px}h2{font-size:14px;text-transform:uppercase;letter-spacing:.07em;margin:20px 1px 8px}.al{font-size:12px;padding:10px;border-radius:9px}.fab{width:54px;height:54px;border-radius:50%;padding:0;right:16px;bottom:80px;font-size:0}.fab:after{content:'+';font-size:29px;line-height:54px}nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:68px;background:#fff;border-top:1px solid #dfe1e4;display:flex;padding:0;box-shadow:0 -5px 18px rgba(25,28,32,.07)}nav button{height:68px;max-width:none;margin:0;padding:30px 2px 5px;font-size:9px;position:relative;color:#62686f}nav button:before{position:absolute;top:8px;left:0;right:0;text-align:center;font-size:19px}nav button:nth-child(1):before{content:'⌂'}nav button:nth-child(2):before{content:'↔'}nav button:nth-child(3):before{content:'▣'}nav button:nth-child(4):before{content:'▤'}nav button:nth-child(5):before{content:'▥'}nav button:nth-child(6):before{content:'•••'}nav button.on{color:#a91f2c;box-shadow:inset 0 3px 0 #b4202d}dialog{width:calc(100% - 20px);border-radius:14px;padding:18px}.prow{grid-template-columns:1fr 68px 82px 30px}input,select{font-size:16px}}
 
+
+/* FASE 2 SEGURA: composición móvil premium, sin cambios de JavaScript */
+.app-mobile-header{display:none}
+@media(max-width:760px){
+ body{background:#f6f6f7!important;padding-bottom:92px!important}
+ .app-mobile-header{display:block;padding:18px 16px 8px;background:#f6f6f7}
+ .app-brand{display:flex;align-items:center;gap:11px;font-size:16px;font-weight:800;letter-spacing:.015em;color:#17191d}
+ .app-logo{position:relative;width:30px;height:28px;display:inline-block}
+ .app-logo:before,.app-logo:after{content:'';position:absolute;width:23px;height:10px;left:2px;background:linear-gradient(90deg,#e23447,#9c1623);transform:skew(-28deg);border-radius:2px}
+ .app-logo:before{top:3px}.app-logo:after{top:15px;left:6px}
+ .app-mobile-header h1{font-size:28px;line-height:1;margin:24px 0 5px;color:#17191d;letter-spacing:-.6px}
+ .app-mobile-header p{margin:0;color:#747980;font-size:14px}
+ .period-chip{display:inline-flex;margin-top:13px;padding:8px 11px;background:#fff;border:1px solid #dfe1e4;border-radius:8px;color:#40454b;font-size:12px;box-shadow:0 2px 6px rgba(25,28,32,.03)}
+ main{padding:8px 14px 118px!important;background:#f6f6f7!important}
+ main:before,main:after{display:none!important}
+ .hero{position:relative!important;overflow:hidden!important;background:linear-gradient(135deg,#202328 0%,#30343a 72%,#531a22 100%)!important;border:0!important;border-radius:14px!important;padding:21px 18px!important;margin-bottom:11px!important;box-shadow:0 12px 28px rgba(23,26,30,.17)!important}
+ .hero:after{content:''!important;display:block!important;position:absolute!important;width:180px!important;height:180px!important;right:-82px!important;bottom:-105px!important;border-radius:0!important;background:linear-gradient(135deg,transparent 38%,rgba(202,38,53,.28) 38%,rgba(202,38,53,.28) 51%,transparent 51%,transparent 59%,rgba(202,38,53,.13) 59%,rgba(202,38,53,.13) 70%,transparent 70%)!important;transform:rotate(8deg)!important}
+ .hero>small:first-child{text-transform:none!important;font-size:11px!important;color:#d6d9dd!important;letter-spacing:.03em!important}
+ .big{font-size:38px!important;line-height:1.05!important;margin:8px 0 14px!important;position:relative;z-index:1}
+ .hero>div:not(.big):not(.tip){padding:7px 0!important;font-size:13px!important;position:relative;z-index:1}
+ .hero>div:not(.big):not(.tip) small{font-size:10px!important;color:#aeb4bb!important}
+ .tip{display:none!important}
+ .al{font-size:12px!important;padding:10px 12px!important;border-radius:10px!important;margin-bottom:9px!important}
+ .card{border-radius:12px!important;padding:15px!important;margin-bottom:11px!important;border:1px solid #e1e3e6!important;box-shadow:0 5px 16px rgba(25,28,32,.05)!important}
+ .card>b:first-child{font-size:16px!important}.card p{font-size:13px!important;line-height:1.48!important;color:#555b62!important}
+ h2{font-size:14px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#50555b!important;margin:21px 2px 9px!important}
+ .row{padding:12px 2px!important;font-size:13px!important}.row small{font-size:10px!important}.empty{padding:24px 8px!important;font-size:13px!important}
+ .fab{width:54px!important;height:54px!important;border-radius:50%!important;padding:0!important;right:16px!important;bottom:82px!important;font-size:0!important;box-shadow:0 10px 24px rgba(151,24,36,.3)!important;z-index:30!important}.fab:after{content:'+';font-size:30px;line-height:54px}
+ nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:100%!important;height:70px!important;background:#fff!important;border-top:1px solid #dfe1e4!important;box-shadow:0 -6px 20px rgba(25,28,32,.08)!important;padding:0!important;display:grid!important;grid-template-columns:repeat(4,1fr)!important;z-index:20!important}
+ nav:before{display:none!important}
+ nav button{height:70px!important;max-width:none!important;margin:0!important;padding:33px 1px 7px!important;border-radius:0!important;background:#fff!important;color:#666c73!important;font-size:10px!important;position:relative!important;text-align:center!important}
+ nav button:before{position:absolute;left:0;right:0;top:9px;text-align:center;font-size:20px;line-height:20px}
+ nav button:nth-child(1):before{content:'⌂'}nav button:nth-child(2):before{content:'↔'}nav button:nth-child(3):before{content:'▣'}nav button:nth-child(6):before{content:'•••'}
+ nav button:nth-child(4),nav button:nth-child(5){display:none!important}
+ nav button.on{color:#a91f2c!important;box-shadow:inset 0 3px 0 #b4202d!important}
+ dialog{width:calc(100% - 20px)!important;max-height:90vh!important;border-radius:15px!important;padding:18px!important}
+ input,select{font-size:16px!important}.prow{grid-template-columns:1fr 68px 82px 30px!important}
+}
+
+
+/* FASE 3: KPIs y próximos pagos */
+.mobile-dashboard-widgets{display:none}
+@media(max-width:760px){
+ .mobile-dashboard-widgets{display:block;padding:0 14px 2px;background:#f6f6f7}
+ .mobile-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+ .mobile-kpi{background:#fff;border:1px solid #e1e3e6;border-radius:11px;padding:13px 12px;box-shadow:0 4px 13px rgba(25,28,32,.04)}
+ .mobile-kpi span{display:block;color:#747a81;font-size:9px;font-weight:600;letter-spacing:.025em}.mobile-kpi b{display:block;margin-top:5px;color:#202328;font-size:18px}.mobile-kpi.expense b{color:#a91f2c}
+ .mobile-payments{background:#fff;border:1px solid #e1e3e6;border-radius:11px;padding:13px 13px 6px;margin-bottom:10px;box-shadow:0 4px 13px rgba(25,28,32,.04)}
+ .mobile-section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}.mobile-section-title strong{font-size:16px}.mobile-section-title button{border:0;background:none;color:#a91f2c;font:600 11px Figtree,sans-serif;padding:5px;cursor:pointer}
+ .mobile-due{display:grid;grid-template-columns:43px 1fr auto;align-items:center;gap:9px;padding:9px 0;border-top:1px solid #eceef0}.mobile-date{overflow:hidden;border-radius:7px;background:#f1f2f3;text-align:center;color:#656b72;font-size:9px}.mobile-date b{display:block;background:#a91f2c;color:#fff;padding:2px;font-size:15px}.mobile-due-info strong{display:block;font-size:12px}.mobile-due-info small{display:block;color:#777d84;font-size:10px}.mobile-status{padding:4px 7px;border-radius:12px;background:#fde9eb;color:#981d28;font-size:9px}.mobile-status.paid{background:#e7f3ee;color:#237158}.mobile-no-due{padding:12px 2px;color:#777d84;font-size:12px}
+}
+
+
+.fixed-date-picks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:7px}.fixed-date-picks label{display:flex;align-items:center;gap:10px;margin:0;padding:12px;border:1px solid #dfe2e5;border-radius:10px;background:#fafafa;cursor:pointer}.fixed-date-picks input{width:auto;accent-color:#ae1f2d}.fixed-date-picks span b{display:block;font-size:18px;line-height:1}.fixed-date-picks span small{display:block;margin-top:3px;color:#767b82;font-size:10px}@media(max-width:420px){.fixed-date-picks{grid-template-columns:1fr}}
+
+
+/* FASE 5: menú Más funcional en móvil */
+.mobile-more-sheet,.mobile-more-backdrop{display:none}
+@media(max-width:760px){
+ .mobile-more-backdrop{display:block;position:fixed;inset:0;background:rgba(18,21,25,.42);backdrop-filter:blur(2px);z-index:38}
+ .mobile-more-sheet{display:block;position:fixed;left:10px;right:10px;bottom:80px;background:#fff;border:1px solid #e0e2e5;border-radius:16px;padding:15px;z-index:40;box-shadow:0 22px 55px rgba(20,23,27,.25)}
+ .mobile-more-sheet[hidden],.mobile-more-backdrop[hidden]{display:none!important}
+ .mobile-more-head{display:flex;align-items:center;justify-content:space-between;padding:2px 3px 12px}.mobile-more-head strong{display:block;font-size:17px}.mobile-more-head small{display:block;color:#777d84;font-size:10px;margin-top:2px}.mobile-more-head button{width:32px;height:32px;border:0;border-radius:50%;background:#f0f1f2;color:#4e5359;font:22px/32px Figtree,sans-serif;cursor:pointer}
+ .mobile-more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mobile-more-grid button{border:1px solid #e2e4e7;border-radius:11px;background:#fafafa;color:#25292e;padding:13px 6px 11px;min-height:93px;font-family:Figtree,sans-serif;cursor:pointer}.mobile-more-grid button span{display:block;color:#a91f2c;font-size:23px;line-height:1;margin-bottom:9px}.mobile-more-grid button b{display:block;font-size:11px}.mobile-more-grid button small{display:block;color:#7a7f85;font-size:8px;margin-top:4px;line-height:1.25}
+}
+
+
+@media(max-width:760px){#app>input[type="month"]{margin-top:5px}.bar{margin:12px 0}.bar>span{font-size:11px}.gap{gap:7px}.gap .btn{font-size:12px;padding:10px 12px}}
+
+
+/* FASE 6: movimientos con apariencia bancaria */
+@media(max-width:760px){
+ #app .card .row{position:relative;align-items:center!important;padding:13px 3px 13px 46px!important;min-height:54px}
+ #app .card .row:before{content:'↗';position:absolute;left:2px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:10px;background:#f1f2f3;color:#545a61;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800}
+ #app .card .row:has(.amt.in):before{content:'↙';background:#e8f4ef;color:#207158}
+ #app .card .row:has(.amt.out):before{content:'↗';background:#fdecee;color:#a91f2c}
+ #app .card .row .amt{font-size:13px}
+ #app .card .row>div:first-child b,#app .card .row>span:first-child{font-weight:700}
+ #app>div:first-child:has(input[type='month']){background:#fff;border:1px solid #e1e3e6;border-radius:11px;padding:9px;box-shadow:0 4px 13px rgba(25,28,32,.04)}
+ #app>div:first-child:has(input[type='month']) input,#app>div:first-child:has(input[type='month']) select{border:0!important;background:#f4f5f6!important;font-size:13px!important;padding:10px!important}
+}
+
+
+.mobile-context-title{display:none}@media(max-width:760px){.mobile-context-title{display:block;margin:2px 0 12px}.mobile-context-title h2{margin:0!important;font-size:24px!important;letter-spacing:-.4px!important;text-transform:none!important;color:#17191d!important}.mobile-context-title p{margin:4px 0 0;color:#747a81;font-size:12px}}
+
+
+/* FASE FINAL: acabado premium y ajustes de accesibilidad */
+:root{--premium-red:#a91f2c;--premium-dark:#202328;--premium-gray:#f6f6f7}
+.card,.hero,.mobile-kpi,.mobile-payments,.mobile-more-sheet{transition:box-shadow .18s ease,transform .18s ease}
+@media(hover:hover){.card:hover,.mobile-kpi:hover,.mobile-payments:hover{box-shadow:0 10px 26px rgba(25,28,32,.075)}}
+.btn:focus-visible,nav button:focus-visible,input:focus-visible,select:focus-visible,.mobile-more-grid button:focus-visible{outline:3px solid rgba(169,31,44,.22);outline-offset:2px}
+@media(max-width:760px){
+ .app-mobile-header{padding-top:max(18px,env(safe-area-inset-top))}
+ .mobile-kpi-grid{margin-top:2px}.mobile-payments{margin-top:2px}
+ .hero{border-left:4px solid var(--premium-red)!important}
+ .hero .big{letter-spacing:-1.2px!important}
+ .mobile-kpi b{letter-spacing:-.3px}
+ nav{padding-bottom:env(safe-area-inset-bottom)!important;height:calc(70px + env(safe-area-inset-bottom))!important}
+ .fab{bottom:calc(82px + env(safe-area-inset-bottom))!important}
+ .mobile-more-sheet{bottom:calc(80px + env(safe-area-inset-bottom))!important}
+}
+@media(min-width:761px){
+ main{max-width:1220px!important}.hero{border-left:5px solid var(--premium-red)}
+ nav button{transition:background .16s ease,color .16s ease,transform .16s ease}nav button:hover{transform:translateX(2px)}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.final-version{font-size:8px;color:#fff;background:#a91f2c;border-radius:9px;padding:3px 6px;letter-spacing:.08em;margin-left:auto}
 </style>
 </head>
 <body>
+<header class="app-mobile-header" aria-label="Encabezado de Control Financiero"><div class="app-brand"><span class="app-logo" aria-hidden="true"></span><span>CONTROL FINANCIERO</span><span class="final-version">FINAL</span></div><h1>Resumen</h1><p>Tu dinero, bajo control</p><div class="period-chip">▣ Mes actual</div></header>
+<section id="mobileDashboardWidgets" class="mobile-dashboard-widgets" aria-label="Resumen financiero del mes"><div class="mobile-kpi-grid"><article class="mobile-kpi"><span>↑ INGRESOS DEL MES</span><b id="mkIncome">L 0</b></article><article class="mobile-kpi expense"><span>↓ GASTOS DEL MES</span><b id="mkExpense">L 0</b></article></div><article class="mobile-payments"><div class="mobile-section-title"><strong>Próximos pagos</strong><button type="button" onclick="tab='fij';render();scrollTo(0,0)">Ver todos</button></div><div id="mobileDueList"></div></article></section>
 <main id="app"></main>
 <button class="fab" onclick="openTx()">+ Agregar</button>
 <nav id="nav"></nav>
+<section id="mobileMoreSheet" class="mobile-more-sheet" hidden><div class="mobile-more-head"><div><strong>Más opciones</strong><small>Administra tus finanzas</small></div><button type="button" id="closeMobileMore" aria-label="Cerrar">×</button></div><div class="mobile-more-grid"><button type="button" data-go="tar"><span>▤</span><b>Cuentas</b><small>Débito y crédito</small></button><button type="button" data-go="rep"><span>▥</span><b>Reportes</b><small>Análisis mensual</small></button><button type="button" data-go="aju"><span>⚙</span><b>Ajustes</b><small>Seguridad y respaldo</small></button></div></section><div id="mobileMoreBackdrop" class="mobile-more-backdrop" hidden></div>
 <dialog id="dlg"></dialog>
 <div id="lock" hidden><form onsubmit="event.preventDefault();unlock()"><div style="font-size:30px;font-weight:800">Mis finanzas</div><p style="color:var(--mut)">Inicia sesión para continuar</p>
 <input id="lu" placeholder="Usuario" autocomplete="username" autocapitalize="none"><input id="lp" type="password" placeholder="Contraseña" autocomplete="current-password" style="margin-top:10px">
@@ -275,24 +369,21 @@ function dl(name,url){const a=document.createElement('a');a.href=url;a.download=
 function img(){html2canvas($('#rep'),{backgroundColor:'#fff',scale:2}).then(c=>dl('reporte-'+M+'.png',c.toDataURL()))}
 
 const dim=(y,m)=>new Date(y,m+1,0).getDate();
-const daysOf=f=>[...(f.days&&f.days.length?f.days:[f.day||30])].map(Number).filter((d,i,a)=>d>=1&&d<=31&&a.indexOf(d)==i).sort((a,b)=>a-b);
-const occ=(f,y,m,day)=>iso(new Date(y,m,Math.min(day||daysOf(f)[0],dim(y,m))));
-const paid=(f,ym,day)=>S.tx.some(t=>t.fixed==f.id&&t.date.startsWith(ym)&&(t.fixedDay==day||(!t.fixedDay&&daysOf(f).length==1)));
+const fixedDays=f=>[...(f.days&&f.days.length?f.days:[f.day||30])].map(Number).filter((d,i,a)=>d>=1&&d<=31&&a.indexOf(d)==i).sort((a,b)=>a-b);
+const occ=(f,y,m,day)=>iso(new Date(y,m,Math.min(day||fixedDays(f)[0],dim(y,m))));
+const paid=(f,ym,day)=>S.tx.some(t=>t.fixed==f.id&&t.date.startsWith(ym)&&(t.fixedDay==day||(!t.fixedDay&&fixedDays(f).length==1)));
 const diff=(a,b)=>Math.round((new Date(a+'T12:00')-new Date(b+'T12:00'))/864e5);
-function reserved(nx){const td=today(),n=new Date(),lim=iso(new Date(nx)),y=n.getFullYear(),m=n.getMonth();let r=0;
- S.fixed.forEach(f=>daysOf(f).forEach(day=>[0,1].forEach(i=>{const ym=iso(new Date(y,m+i,1)).slice(0,7),od=occ(f,y,m+i,day);if(!paid(f,ym,day)&&od<lim&&(i==0||od>=td))r+=f.amt||0})));return r}
-function dues(){const n=new Date(),y=n.getFullYear(),m=n.getMonth(),td=today(),r=[];
- S.fixed.forEach(f=>daysOf(f).forEach(day=>[0,1].forEach(i=>{const ym=iso(new Date(y,m+i,1)).slice(0,7);if(paid(f,ym,day))return;const df=diff(occ(f,y,m+i,day),td);if(i?df>=0&&df<=3:df<=3)r.push({f,day,df})})));return r.sort((a,b)=>a.df-b.df)}
-const remind=()=>dues().map(({f,day,df})=>{const w=df<0?'Vencido hace '+(-df)+(df<-1?' días':' día'):df==0?'Hoy toca pagar':df==1?'Mañana vence':'Vence en '+df+' días';return`<div class="al ${df<=0?'bad':'warn'}" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${w}: ${e(f.name)} · cuota día ${day}${f.amt?' · '+L(f.amt):''}</span><button class="btn" style="padding:6px 12px" onclick="payFixed(${f.id},${day})">Pagar</button></div>`}).join('');
+function reserved(nx){const td=today(),n=new Date(),lim=iso(new Date(nx)),y=n.getFullYear(),m=n.getMonth();let r=0;S.fixed.forEach(f=>fixedDays(f).forEach(day=>[0,1].forEach(i=>{const ym=iso(new Date(y,m+i,1)).slice(0,7),od=occ(f,y,m+i,day);if(!paid(f,ym,day)&&od<lim&&(i==0||od>=td))r+=f.amt||0})));return r}
+function dues(){const n=new Date(),y=n.getFullYear(),m=n.getMonth(),td=today(),r=[];S.fixed.forEach(f=>fixedDays(f).forEach(day=>[0,1].forEach(i=>{const ym=iso(new Date(y,m+i,1)).slice(0,7);if(paid(f,ym,day))return;const df=diff(occ(f,y,m+i,day),td);if(i?df>=0&&df<=3:df<=3)r.push({f,day,df})})));return r.sort((a,b)=>a.df-b.df)}
+const remind=()=>dues().map(({f,day,df})=>{const w=df<0?'Vencido hace '+(-df)+(df<-1?' días':' día'):df==0?'Hoy toca pagar':df==1?'Mañana vence':'Vence en '+df+' días';return`<div class="al ${df<=0?'bad':'warn'}" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${w}: ${e(f.name)} · día ${day}${f.amt?' · '+L(f.amt):''}</span><button class="btn" style="padding:6px 10px" onclick="payFixed(${f.id},${day})">Pagar</button></div>`}).join('');
 const defSrc=()=>(S.cards.find(c=>c.kind=='debito')||{id:'cuenta'}).id;
 let FD={id:null,name:'',amt:'',days:[30],cat:'Servicios',src:defSrc()};
-function vFix(){const td=today(),ym=td.slice(0,7),n=new Date();const rows=[...S.fixed].sort((a,b)=>daysOf(a)[0]-daysOf(b)[0]).map(f=>{const ds=daysOf(f),states=ds.map(day=>{const ok=paid(f,ym,day),df=diff(occ(f,n.getFullYear(),n.getMonth(),day),td),st=ok?'Pagado':df<0?'Vencido hace '+(-df)+' d':df==0?'Vence hoy':'Vence en '+df+' d';return{day,ok,df,st}});return`<div class="row" style="cursor:default"><div><b>${e(f.name)}</b><small>Días ${ds.join(' y ')} · ${f.amt?L(f.amt)+' por fecha':'monto variable'} · ${e(f.cat)} · ${e(srcName(f.src))}</small>${states.map(x=>`<small style="color:${x.ok?'var(--in)':x.df<=0?'var(--out)':'var(--mut)'}">Día ${x.day}: ${x.st}</small>`).join('')}</div><div style="text-align:right">${states.filter(x=>!x.ok).map(x=>`<button class="btn" style="padding:6px 10px;font-size:13px;margin:2px" onclick="payFixed(${f.id},${x.day})">Pagar ${x.day}</button>`).join('')}<button class="btn g" style="padding:6px 10px;font-size:13px;margin:2px" onclick="editFixed(${f.id})">Editar</button></div></div>`}).join('');
- return`<h2 style="margin-top:0">Agenda de gastos fijos</h2><div class="card">${rows||'<div class="empty">Agrega tus pagos mensuales: luz, agua, plan móvil, préstamo…</div>'}</div><div class="card"><b>${FD.id?'Editar gasto fijo':'Agregar gasto fijo'}</b><label>Nombre</label><input value="${e(FD.name)}" oninput="FD.name=this.value" placeholder="Ej. Pago de préstamo"><label>Monto por cada fecha (L). Déjalo vacío si cambia</label><input type="number" inputmode="decimal" value="${FD.amt}" oninput="FD.amt=this.value"><label>Fechas de pago mensuales</label><div class="date-picks"><label><input type="checkbox" ${FD.days.includes(15)?'checked':''} onchange="toggleFDay(15,this.checked)"> Día 15</label><label><input type="checkbox" ${FD.days.includes(30)?'checked':''} onchange="toggleFDay(30,this.checked)"> Día 30</label></div><label>Categoría</label><select onchange="FD.cat=this.value">${catOpts(FD.cat)}</select><label>Se paga con</label>${sel(accts('out'),FD.src,'FD.src=this.value')}<div class="gap">${FD.id?'<button class="btn r" onclick="delFixed()">Eliminar</button><button class="btn g" onclick="resetFD()">Cancelar</button>':''}<button class="btn" onclick="saveFixed()">Guardar gasto fijo</button></div></div>`}
-function toggleFDay(day,on){FD.days=FD.days||[];FD.days=on?[...new Set([...FD.days,day])]:FD.days.filter(d=>d!=day)}
+function vFix(){const td=today(),ym=td.slice(0,7),n=new Date();const rows=[...S.fixed].sort((a,b)=>fixedDays(a)[0]-fixedDays(b)[0]).map(f=>{const ds=fixedDays(f),states=ds.map(day=>{const ok=paid(f,ym,day),df=diff(occ(f,n.getFullYear(),n.getMonth(),day),td),st=ok?'Pagado':df<0?'Vencido hace '+(-df)+' d':df==0?'Vence hoy':'Vence en '+df+' d';return{day,ok,df,st}});return`<div class="row" style="cursor:default"><div><b>${e(f.name)}</b><small>Días ${ds.join(' y ')} · ${f.amt?L(f.amt)+' por fecha':'monto variable'} · ${e(f.cat)} · ${e(srcName(f.src))}</small>${states.map(x=>`<small style="color:${x.ok?'var(--in)':x.df<=0?'var(--out)':'var(--mut)'}">Día ${x.day}: ${x.st}</small>`).join('')}</div><div style="text-align:right">${states.filter(x=>!x.ok).map(x=>`<button class="btn" style="padding:6px 9px;font-size:12px;margin:2px" onclick="payFixed(${f.id},${x.day})">Pagar ${x.day}</button>`).join('')}<button class="btn g" style="padding:6px 9px;font-size:12px;margin:2px" onclick="editFixed(${f.id})">Editar</button></div></div>`}).join('');return`<h2 style="margin-top:0">Gastos fijos</h2><div class="card">${rows||'<div class="empty">Agrega tus pagos mensuales.</div>'}</div><div class="card"><b>${FD.id?'Editar gasto fijo':'Agregar gasto fijo'}</b><label>Nombre</label><input value="${e(FD.name)}" oninput="FD.name=this.value" placeholder="Ej. Pago de préstamo"><label>Monto por cada fecha (L)</label><input type="number" inputmode="decimal" value="${FD.amt}" oninput="FD.amt=this.value"><label>Fechas de pago</label><div class="fixed-date-picks"><label><input type="checkbox" ${FD.days.includes(15)?'checked':''} onchange="toggleFixedDay(15,this.checked)"><span><b>15</b><small>Primera quincena</small></span></label><label><input type="checkbox" ${FD.days.includes(30)?'checked':''} onchange="toggleFixedDay(30,this.checked)"><span><b>30</b><small>Fin de mes</small></span></label></div><small style="display:block;color:var(--mut);margin-top:8px">Puedes seleccionar una fecha o ambas. El monto se aplica por cada fecha seleccionada.</small><label>Categoría</label><select onchange="FD.cat=this.value">${catOpts(FD.cat)}</select><label>Se paga con</label>${sel(accts('out'),FD.src,'FD.src=this.value')}<div class="gap">${FD.id?'<button class="btn r" onclick="delFixed()">Eliminar</button><button class="btn g" onclick="resetFD()">Cancelar</button>':''}<button class="btn" onclick="saveFixed()">Guardar</button></div></div>`}
+function toggleFixedDay(day,on){FD.days=FD.days||[];FD.days=on?[...new Set([...FD.days,day])]:FD.days.filter(d=>d!=day)}
 const resetFD=()=>{FD={id:null,name:'',amt:'',days:[30],cat:'Servicios',src:defSrc()};render()};
-function editFixed(id){FD={...S.fixed.find(f=>f.id==id)};FD.days=daysOf(FD);FD.amt=FD.amt||'';render();scrollTo(0,document.body.scrollHeight)}
-function saveFixed(){const ds=[...(FD.days||[])].map(Number).sort((a,b)=>a-b);if(!FD.name.trim()||!ds.length)return alert('Escribe el nombre y selecciona al menos una fecha: 15 o 30.');const f={id:FD.id||Date.now(),name:FD.name.trim(),amt:+FD.amt||0,days:ds,day:ds[0],cat:FD.cat,src:FD.src},i=S.fixed.findIndex(x=>x.id==f.id);i<0?S.fixed.push(f):S.fixed[i]=f;save();resetFD()}
-function delFixed(){if(confirm('¿Eliminar este gasto fijo? Los pagos ya registrados se conservan.')){S.fixed=S.fixed.filter(x=>x.id!=FD.id);save();resetFD()}}
+function editFixed(id){FD={...S.fixed.find(f=>f.id==id)};FD.days=fixedDays(FD);FD.amt=FD.amt||'';render();scrollTo(0,document.body.scrollHeight)}
+function saveFixed(){const ds=[...(FD.days||[])].map(Number).sort((a,b)=>a-b);if(!FD.name.trim()||!ds.length)return alert('Escribe el nombre y selecciona el día 15, el 30 o ambas fechas.');const f={id:FD.id||Date.now(),name:FD.name.trim(),amt:+FD.amt||0,days:ds,day:ds[0],cat:FD.cat,src:FD.src},i=S.fixed.findIndex(x=>x.id==f.id);i<0?S.fixed.push(f):S.fixed[i]=f;save();resetFD();if(window.refreshMobileWidgets)refreshMobileWidgets()}
+function delFixed(){if(confirm('¿Eliminar este gasto fijo? Los pagos ya registrados se conservan.')){S.fixed=S.fixed.filter(x=>x.id!=FD.id);save();resetFD();if(window.refreshMobileWidgets)refreshMobileWidgets()}}
 function payFixed(id,day){const f=S.fixed.find(x=>x.id==id);D={id:Date.now(),type:'out',date:today(),amt:f.amt||'',desc:f.name+' · cuota día '+day,cat:f.cat,src:accts('out').some(a=>a[0]==f.src)?f.src:'cuenta',parts:[],fixed:f.id,fixedDay:day,isNew:true};mdl();$('#dlg').showModal()}
 function askNotif(){if(typeof Notification=='undefined')return alert('Tu navegador no permite avisos. Los recordatorios los verás dentro de la app.');
  if(Notification.permission=='granted'){notify(1);return}
@@ -370,9 +461,68 @@ function delTx(){if(confirm('¿Eliminar este movimiento?')){S.tx=S.tx.filter(x=>
 
 function render(){
  S.fixed=S.fixed||[];$('#app').innerHTML={res:vRes,mov:vMov,fij:vFix,tar:vCards,rep:vRep,aju:vSet}[tab]();
- $('#nav').innerHTML=[['res','Resumen'],['mov','Movimientos'],['fij','Gastos fijos'],['tar','Cuentas'],['rep','Reportes'],['aju','Ajustes']]
+ $('#nav').innerHTML=[['res','Inicio'],['mov','Movimientos'],['fij','Fijos'],['tar','Cuentas'],['rep','Reportes'],['aju','Más']]
   .map(([k,n])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';render();scrollTo(0,0)">${n}</button>`).join('')}
 if(ENC){$('#lock').hidden=false;$('#lu').focus()}else{render();notify()}
+</script>
+<script>
+(function(){
+ function esc(v){return String(v==null?'':v).replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]})}
+ function money(n){return 'L '+Number(n||0).toLocaleString('es-HN',{maximumFractionDigits:2})}
+ function refreshMobileWidgets(){
+   var wrap=document.getElementById('mobileDashboardWidgets'); if(!wrap||typeof S==='undefined')return;
+   var mo=(new Date()).toISOString().slice(0,7), inc=0, exp=0;
+   (S.tx||[]).forEach(function(t){if(!String(t.date||'').startsWith(mo))return;if(t.type==='in')inc+=Number(t.amt)||0;if(t.type==='out')exp+=Number(t.amt)||0;if(t.type==='wd')(t.parts||[]).forEach(function(p){exp+=Number(p.a)||0})});
+   document.getElementById('mkIncome').textContent=money(inc);document.getElementById('mkExpense').textContent=money(exp);
+   var list=document.getElementById('mobileDueList'), items=[];
+   (S.fixed||[]).forEach(function(f){var days=f.days&&f.days.length?f.days:[f.day||30];days.forEach(function(day){var wasPaid=(S.tx||[]).some(function(t){return t.fixed==f.id&&String(t.date||'').startsWith(mo)&&(t.fixedDay==day||(!t.fixedDay&&days.length===1))});items.push({f:f,day:day,paid:wasPaid})})});
+   items.sort(function(a,b){return a.day-b.day});
+   if(!items.length){list.innerHTML='<div class="mobile-no-due">Configura tus pagos del 15 y 30 en Gastos fijos.</div>';return}
+   var month=new Date().toLocaleDateString('es-HN',{month:'short'}).replace('.','').toUpperCase();
+   list.innerHTML=items.slice(0,4).map(function(x){return '<div class="mobile-due"><div class="mobile-date"><b>'+x.day+'</b>'+month+'</div><div class="mobile-due-info"><strong>'+esc(x.f.name)+'</strong><small>'+(x.f.amt?money(x.f.amt):'Monto variable')+'</small></div><span class="mobile-status '+(x.paid?'paid':'')+'">'+(x.paid?'Pagado':'Pendiente')+'</span></div>'}).join('');
+ }
+ window.addEventListener('load',function(){setTimeout(refreshMobileWidgets,0)});
+ document.addEventListener('click',function(){setTimeout(refreshMobileWidgets,50)});
+ document.addEventListener('change',function(){setTimeout(refreshMobileWidgets,50)});
+ window.refreshMobileWidgets=refreshMobileWidgets;
+})();
+</script>
+<script>
+(function(){
+ function isMobile(){return window.matchMedia('(max-width:760px)').matches}
+ function sheet(){return document.getElementById('mobileMoreSheet')}
+ function back(){return document.getElementById('mobileMoreBackdrop')}
+ function closeMore(){if(sheet())sheet().hidden=true;if(back())back().hidden=true}
+ function openMore(){if(!isMobile())return;if(sheet())sheet().hidden=false;if(back())back().hidden=false}
+ document.addEventListener('click',function(ev){
+   var navBtn=ev.target.closest&&ev.target.closest('#nav button');
+   if(navBtn&&isMobile()){var buttons=[].slice.call(document.querySelectorAll('#nav button'));if(buttons.indexOf(navBtn)===5){ev.preventDefault();ev.stopImmediatePropagation();openMore();return}}
+   var go=ev.target.closest&&ev.target.closest('[data-go]');if(go){closeMore();window.tab=go.getAttribute('data-go');render();scrollTo(0,0);if(window.refreshMobileWidgets)refreshMobileWidgets();return}
+   if(ev.target.id==='closeMobileMore'||ev.target.id==='mobileMoreBackdrop')closeMore();
+ },true);
+ window.addEventListener('resize',function(){if(!isMobile())closeMore()});
+})();
+</script>
+<script>
+(function(){
+ function mobileContextTitle(){
+   if(!window.matchMedia('(max-width:760px)').matches)return;
+   var app=document.getElementById('app');if(!app)return;
+   var old=document.getElementById('mobileContextTitle');if(old)old.remove();
+   var names={mov:['Movimientos','Consulta y filtra tu historial'],fij:['Gastos fijos','Controla tus compromisos mensuales'],tar:['Cuentas','Tus medios de pago'],rep:['Reportes','Visualiza tu comportamiento financiero'],aju:['Ajustes','Seguridad, respaldo y preferencias']};
+   if(typeof tab==='undefined'||!names[tab])return;
+   var d=document.createElement('div');d.id='mobileContextTitle';d.className='mobile-context-title';d.innerHTML='<h2>'+names[tab][0]+'</h2><p>'+names[tab][1]+'</p>';app.prepend(d)
+ }
+ document.addEventListener('click',function(){setTimeout(mobileContextTitle,20)});window.addEventListener('load',function(){setTimeout(mobileContextTitle,20)});window.addEventListener('resize',mobileContextTitle);
+})();
+</script>
+<script>
+(function(){
+ var app=document.getElementById('app');if(!app)return;
+ var timer=0,obs=new MutationObserver(function(){clearTimeout(timer);timer=setTimeout(function(){if(window.refreshMobileWidgets)window.refreshMobileWidgets()},30)});
+ obs.observe(app,{childList:true});
+ window.addEventListener('load',function(){if(window.refreshMobileWidgets)window.refreshMobileWidgets()});
+})();
 </script>
 </body>
 </html>
