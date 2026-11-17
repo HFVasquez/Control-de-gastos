@@ -265,7 +265,7 @@ function spends(){const r=[];
  return r}
 
 function budget(){
- const k=calc(),avail=k.bank+k.cash,sp=spends(),td=today(),spentT=sum(sp.filter(x=>x.date==td)),
+ const k=calc(),liquid=Object.values(k.bal).reduce((s,v)=>s+Math.max(0,+v||0),0)+Math.max(0,k.cash),avail=liquid-k.debt,sp=spends(),td=today(),spentT=sum(sp.filter(x=>x.date==td)),
  p=+S.set.payday||13,n=new Date(),t0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),
  nx=new Date(n.getFullYear(),n.getMonth()+(n.getDate()<p?0:1),p),
  days=Math.max(1,Math.round((nx-t0)/864e5)),rsv=reserved(nx),free=avail-rsv,
@@ -285,11 +285,11 @@ function vRes(){
  const b=budget(),k=b.k,al=[],row=([n,v,c,sub])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid #2F4361"><span>${e(n)}${sub?`<small>${sub}</small>`:''}</span><b class="${v<0&&!c?'neg':''}" style="${c?'font-weight:600;color:#B9C5D6':''}">${L(v)}</b></div>`,mo=today().slice(0,7),spBy=id=>L(sum(S.tx.filter(t=>t.type=='out'&&(t.src||'cuenta')==id&&t.date.startsWith(mo))));
  if(b.avail<=S.set.min)al.push(['bad','Te queda poco: '+L(b.avail)+', por debajo de tu alerta de '+L(S.set.min)+'.']);
  if(b.w7>0&&b.free>0&&b.free/b.w7<b.days)al.push(['warn','Al ritmo de los últimos 7 días ('+L(b.w7)+' al día), tu dinero libre alcanza para '+Math.floor(b.free/b.w7)+' días y faltan '+b.days+' para tu pago.']);
- const rows=S.cards.filter(c=>c.kind=='debito').map(c=>[cname(c),k.bal[c.id]||0,0,'Gastado este mes: '+spBy(c.id)]);
- if(k.bal.cuenta||!rows.length)rows.push(['Sin tarjeta asignada',k.bal.cuenta||0]);
- rows.push(['Efectivo',k.cash,0,'Gastado este mes: '+L(sum(spends().filter(x=>x.src.startsWith('Efectivo')&&x.date.startsWith(mo))))]);
+ const rows=S.cards.filter(c=>c.kind=='debito').map(c=>[cname(c),Math.max(0,k.bal[c.id]||0),0,'Gastado este mes: '+spBy(c.id)]);
+ if(k.bal.cuenta||!rows.length)rows.push(['Sin tarjeta asignada',Math.max(0,k.bal.cuenta||0)]);
+ rows.push(['Efectivo',Math.max(0,k.cash),0,'Gastado este mes: '+L(sum(spends().filter(x=>x.src.startsWith('Efectivo')&&x.date.startsWith(mo))))]);
  const cr=S.cards.filter(c=>c.kind=='credito').map(c=>[cname(c)+' · debes',k.dbt[c.id]||0,1,'Compras este mes: '+spBy(c.id)]);
- return`<div class="hero"><small>Saldo total disponible</small><div class="big ${b.avail<0?'neg':''}">${L(b.avail)}</div>${rows.map(row).join('')}${cr.map(row).join('')}</div>`+
+ return`<div class="hero"><small>Saldo neto disponible (dinero disponible menos deuda de crédito)</small><div class="big ${b.avail<0?'neg':''}">${L(b.avail)}</div>${rows.map(row).join('')}${cr.map(row).join('')}</div>`+
  remind()+al.map(a=>`<div class="al ${a[0]}">${a[1]}</div>`).join('')+
  `<div class="card"><b>Aviso de hoy</b><p style="margin:6px 0 0">${b.msg}</p></div>
  <h2>Últimos movimientos</h2><div class="card">${list([...S.tx].sort(byDate).slice(0,6))}</div>`}
@@ -312,7 +312,7 @@ function vMov(){
 function vCards(){
  const k=calc(),mo=today().slice(0,7);
  const d=(a,b)=>`<div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--mut);font-size:14px"><span>${a}</span><b style="color:var(--ink)">${b}</b></div>`;
- const row=(id,name,kind)=>{const cr=kind=='credito',v=cr?(k.dbt[id]||0):(k.bal[id]||0),
+ const row=(id,name,kind)=>{const cr=kind=='credito',v=cr?(k.dbt[id]||0):Math.max(0,k.bal[id]||0),
   mine=S.tx.filter(t=>(t.src||'cuenta')==id),M0=t=>t.date.startsWith(mo),
   spM=sum(mine.filter(t=>t.type=='out'&&M0(t))),spT=sum(mine.filter(t=>t.type=='out')),
   wdT=sum(mine.filter(t=>t.type=='wd')),trT=sum(mine.filter(t=>t.type=='tr')),
@@ -470,7 +470,9 @@ function saveTx(){
  else delete D.parts;
  if(D.type=='in')D.desc=D.desc||'Ingreso';
  if(D.type!='out')delete D.fixed;
- if(D.type=='tr'||D.type=='wd'){const bl=calc(S.tx.filter(x=>x.id!=D.id)).bal[D.src]||0;if(D.amt>bl+.005&&!confirm('Según la app esa tarjeta solo tiene '+L(bl)+' y vas a sacar '+L(D.amt)+'. Si falta registrar un ingreso, cancela y regístralo primero. ¿Guardar igual?'))return}
+ if(D.type=='tr'||D.type=='wd'){const bl=calc(S.tx.filter(x=>x.id!=D.id)).bal[D.src]||0;if(D.amt>bl+.005)return alert('Saldo insuficiente. Esta cuenta tiene '+L(Math.max(0,bl))+' disponible.')}
+ if(D.type=='out'&&D.src!='efectivo'&&!isCred(D.src)){const bl=calc(S.tx.filter(x=>x.id!=D.id)).bal[D.src]||0;if(D.amt>bl+.005)return alert('Saldo insuficiente. Esta tarjeta tiene '+L(Math.max(0,bl))+' disponible.')}
+ if(D.type=='out'&&D.src=='efectivo'){const bl=calc(S.tx.filter(x=>x.id!=D.id)).cash||0;if(D.amt>bl+.005)return alert('Efectivo insuficiente. Tienes '+L(Math.max(0,bl))+' disponible.')}
  delete D.isNew;const i=S.tx.findIndex(x=>x.id==D.id);i<0?S.tx.push(D):S.tx[i]=D;
  save();$('#dlg').close();M=D.date.slice(0,7);render()}
 function delTx(){if(confirm('¿Eliminar este movimiento?')){S.tx=S.tx.filter(x=>x.id!=D.id);save();$('#dlg').close();render()}}
