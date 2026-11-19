@@ -417,7 +417,7 @@ function vSet(){
  <label>Usuario</label><input id="su" autocomplete="off" autocapitalize="none"><label>Contraseña (mínimo 6)</label><input type="password" id="sp" autocomplete="new-password"><label>Repetir contraseña</label><input type="password" id="sp2" autocomplete="new-password">
  <div class="gap"><button class="btn" onclick="setLock()">Activar protección</button></div>
  <p style="color:var(--out);margin:10px 0 0;font-size:14px">Si olvidas la contraseña no se puede recuperar. Si hay datos importantes, descarga un respaldo (el archivo del respaldo no va cifrado).</p></div>`;
- return sec+`<p style="color:var(--mut);font-size:13px;margin:0 0 8px">Versión de la app: 2026-11-15 b (diagnóstico de saldo por tarjeta)</p><div class="card"><label style="margin-top:0">Avisarme cuando me queden menos de (L)</label><input type="number" value="${S.set.min}" oninput="S.set.min=+this.value;sv()">
+ return sec+`<p style="color:var(--mut);font-size:13px;margin:0 0 8px">Versión de la app: 2026-11-19 · Sincronización corregida</p><div class="card"><label style="margin-top:0">Avisarme cuando me queden menos de (L)</label><input type="number" value="${S.set.min}" oninput="S.set.min=+this.value;sv()">
  <label>Día del mes en que recibo mi sueldo</label><input type="number" min="1" max="28" value="${S.set.payday}" oninput="S.set.payday=Math.min(28,Math.max(1,+this.value||13));sv()">
  <p id="sv" style="margin:8px 0 0;color:var(--in);font-weight:600;min-height:20px"></p>
  <label>Avisos del navegador</label><p style="margin:0 0 4px;color:var(--mut)">${nstat()}</p>
@@ -431,7 +431,7 @@ const sv=()=>{save();const x=$('#sv');if(x)x.textContent='Guardado ✓'};
 function backup(){dl('respaldo-finanzas.json',window.URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'})))}
 function nstat(){if(typeof Notification=='undefined')return'Este navegador no permite avisos. Los recordatorios los verás dentro de la app.';
  const p=Notification.permission;return p=='granted'?'Activados ✓ (te avisan al abrir la app)':p=='denied'?'Bloqueados. Actívalos en los permisos del sitio, en la configuración de tu navegador.':'Sin activar.'}
-function imp(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const s=JSON.parse(r.result);if(!s.tx)throw 0;S=s;save();render()}catch(x){alert('Archivo no válido')}};r.readAsText(f)}
+function imp(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!data||!Array.isArray(data.tx))throw 0;const id=v=>{if(v==='efectivo'||v==='cuenta'||v==null)return v;const n=Number(v);return Number.isSafeInteger(n)?n:v};data.cards=(data.cards||[]).map(c=>({...c,id:id(c.id)}));data.fixed=(data.fixed||[]).map(x=>({...x,id:id(x.id),src:id(x.src)}));data.tx=data.tx.map(t=>({...t,id:id(t.id),src:id(t.src),to:id(t.to),fixed:id(t.fixed)}));data.set=data.set||{min:500,payday:13};S=data;saveLocal();render();if(window.refreshMobileWidgets)refreshMobileWidgets();if(window.cloudPushNow)window.cloudPushNow();else save()}catch(x){console.error(x);alert('Archivo no válido')}};r.readAsText(f)}
 
 function openTx(id){const t=S.tx.find(x=>x.id==id);
  D=t?JSON.parse(JSON.stringify(t)):{id:Date.now(),type:'out',date:today(),amt:'',desc:'',cat:'Almuerzo',src:'efectivo',parts:[]};
@@ -554,6 +554,8 @@ if(ENC){$('#lock').hidden=false;$('#lu').focus()}else{render();notify()}
  function mapTypeOut(t){return {in:'ingreso',out:'gasto',wd:'retiro',tr:'transferencia',adj:'ajuste'}[t]||'gasto'}
  function mapTypeIn(t){return {ingreso:'in',gasto:'out',retiro:'wd',transferencia:'tr',ajuste:'adj'}[t]||'out'}
  function numId(v){const n=Number(v);return Number.isSafeInteger(n)&&n>0?n:Date.now()+Math.floor(Math.random()*100000)}
+ function refId(v){if(v==null||v===''||v==='efectivo'||v==='cuenta')return null;const n=Number(v);return Number.isSafeInteger(n)&&n>0?n:null}
+ function localRef(dbValue,fallback){const v=dbValue??fallback;if(v==='efectivo'||v==='cuenta')return v;const n=Number(v);if(Number.isSafeInteger(n)&&S.cards.some(c=>c.id==n))return n;return fallback==='efectivo'?'efectivo':'cuenta'}
  async function remoteIsEmpty(){const {count,error}=await db.from('movimientos').select('*',{count:'exact',head:true});if(error)throw error;const {count:c2,error:e2}=await db.from('cuentas').select('*',{count:'exact',head:true});if(e2)throw e2;const {count:c3,error:e3}=await db.from('gastos_fijos').select('*',{count:'exact',head:true});if(e3)throw e3;return (count||0)+(c2||0)+(c3||0)===0}
  async function pullCloud(){
   if(!user||syncing)return;syncing=true;status('Cargando datos…','syncing');
@@ -561,8 +563,8 @@ if(ENC){$('#lock').hidden=false;$('#lu').focus()}else{render();notify()}
    const [ca,mo,gf,cf]=await Promise.all([db.from('cuentas').select('*').order('id'),db.from('movimientos').select('*').order('fecha'),db.from('gastos_fijos').select('*').order('id'),db.from('configuracion').select('*').maybeSingle()]);
    for(const r of [ca,mo,gf,cf])if(r.error)throw r.error;
    S.cards=(ca.data||[]).filter(x=>x.tipo!=='efectivo').map(x=>({id:Number(x.id),bank:x.banco||x.nombre||'Cuenta',kind:x.tipo,last4:x.ultimos4||'',limit:Number(x.limite)||0}));
-   S.fixed=(gf.data||[]).map(x=>({id:Number(x.id),name:x.nombre,amt:Number(x.monto)||0,days:x.dias||[30],day:(x.dias||[30])[0],cat:x.categoria||'Otros',src:x.cuenta_id?Number(x.cuenta_id):'cuenta'}));
-   S.tx=(mo.data||[]).map(x=>{const det=x.detalles||{};const type=mapTypeIn(x.tipo);let amt=Number(x.monto)||0;if(type==='adj'&&det.original_amt!=null)amt=Number(det.original_amt);return {id:Number(x.id),date:x.fecha,type,desc:x.descripcion,cat:x.categoria||'Otros',amt,src:x.cuenta_id?Number(x.cuenta_id):(det.src||'cuenta'),to:x.cuenta_destino_id?Number(x.cuenta_destino_id):undefined,parts:det.parts||[],fixed:x.gasto_fijo_id?Number(x.gasto_fijo_id):undefined,fixedDay:x.cuota_dia||undefined}});
+   S.fixed=(gf.data||[]).map(x=>({id:Number(x.id),name:x.nombre,amt:Number(x.monto)||0,days:x.dias||[30],day:(x.dias||[30])[0],cat:x.categoria||'Otros',src:localRef(x.cuenta_id,'cuenta')}));
+   S.tx=(mo.data||[]).map(x=>{const det=x.detalles||{};const type=mapTypeIn(x.tipo);let amt=Number(x.monto)||0;if(type==='adj'&&det.original_amt!=null)amt=Number(det.original_amt);const src=localRef(x.cuenta_id,det.src||'cuenta');const to=type==='tr'?localRef(x.cuenta_destino_id,det.to||'cuenta'):undefined;return {id:Number(x.id),date:x.fecha,type,desc:x.descripcion,cat:x.categoria||'Otros',amt,src,to,parts:det.parts||[],fixed:x.gasto_fijo_id?Number(x.gasto_fijo_id):(det.fixed?Number(det.fixed):undefined),fixedDay:x.cuota_dia||det.fixedDay||undefined}});
    if(cf.data)S.set={min:Number(cf.data.alerta_minima)||500,payday:Number(cf.data.dia_pago)||13};else S.set=S.set||{min:500,payday:13};
    saveLocal();dirty=false;lastPull=Date.now();render();if(window.refreshMobileWidgets)refreshMobileWidgets();status('Sincronizado');
   }catch(e){console.error(e);status('Error de sincronización','error');alert('No se pudieron cargar los datos de Supabase: '+e.message)}finally{syncing=false}
@@ -572,8 +574,8 @@ if(ENC){$('#lock').hidden=false;$('#lu').focus()}else{render();notify()}
   try{
    const uid=user.id;
    const accounts=(S.cards||[]).map(c=>({id:numId(c.id),user_id:uid,nombre:c.bank||'Cuenta',banco:c.bank||null,tipo:c.kind,ultimos4:c.last4||null,limite:Number(c.limit)||0}));
-   const fixed=(S.fixed||[]).map(f=>({id:numId(f.id),user_id:uid,nombre:f.name,monto:Number(f.amt)||0,categoria:f.cat||'Otros',dias:f.days&&f.days.length?f.days:[f.day||30],cuenta_id:typeof f.src==='number'?f.src:null,activo:true}));
-   const movements=(S.tx||[]).map(t=>({id:numId(t.id),user_id:uid,fecha:t.date,tipo:mapTypeOut(t.type),descripcion:t.desc||'Movimiento',categoria:t.cat||null,monto:Math.abs(Number(t.amt)||0.01),cuenta_id:typeof t.src==='number'?t.src:null,cuenta_destino_id:typeof t.to==='number'?t.to:null,gasto_fijo_id:t.fixed?Number(t.fixed):null,cuota_dia:t.fixedDay||null,detalles:{src:t.src,parts:t.parts||[],original_amt:t.type==='adj'?Number(t.amt):undefined}}));
+   const fixed=(S.fixed||[]).map(f=>({id:numId(f.id),user_id:uid,nombre:f.name,monto:Number(f.amt)||0,categoria:f.cat||'Otros',dias:f.days&&f.days.length?f.days:[f.day||30],cuenta_id:refId(f.src),activo:true}));
+   const movements=(S.tx||[]).map(t=>({id:numId(t.id),user_id:uid,fecha:t.date,tipo:mapTypeOut(t.type),descripcion:t.desc||'Movimiento',categoria:t.cat||null,monto:Math.abs(Number(t.amt)||0.01),cuenta_id:refId(t.src),cuenta_destino_id:refId(t.to),gasto_fijo_id:refId(t.fixed),cuota_dia:t.fixedDay||null,detalles:{src:t.src,to:t.to,fixed:t.fixed,fixedDay:t.fixedDay,parts:t.parts||[],original_amt:t.type==='adj'?Number(t.amt):undefined}}));
    for(const table of ['movimientos','gastos_fijos','cuentas']){const r=await db.from(table).delete().eq('user_id',uid);if(r.error)throw r.error}
    if(accounts.length){const r=await db.from('cuentas').insert(accounts);if(r.error)throw r.error}
    if(fixed.length){const r=await db.from('gastos_fijos').insert(fixed);if(r.error)throw r.error}
@@ -583,6 +585,7 @@ if(ENC){$('#lock').hidden=false;$('#lu').focus()}else{render();notify()}
   }catch(e){console.error(e);status('Error al guardar','error');alert('No se pudieron guardar los datos en Supabase: '+e.message)}finally{syncing=false}
  }
  window.cloudScheduleSync=function(){if(!user)return;dirty=true;clearTimeout(syncTimer);syncTimer=setTimeout(pushCloud,900)};
+ window.cloudPushNow=async function(){if(!user)throw new Error('No hay sesión iniciada');dirty=true;clearTimeout(syncTimer);await pushCloud()};
  async function startSession(session){user=session.user;q('cloudAuth').hidden=true;q('cloudBar').hidden=false;status('Conectado');const empty=await remoteIsEmpty();if(empty&&hasLocal())q('cloudMigration').showModal();else await pullCloud()}
  q('cloudLoginForm').addEventListener('submit',async e=>{e.preventDefault();q('cloudAuthMsg').textContent='Ingresando…';const {data,error}=await db.auth.signInWithPassword({email:q('cloudEmail').value.trim(),password:q('cloudPassword').value});if(error){q('cloudAuthMsg').textContent=error.message;return}q('cloudAuthMsg').textContent='';await startSession(data.session)});
  q('cloudUploadLocal').onclick=async()=>{q('cloudMigration').close();await pushCloud()};
